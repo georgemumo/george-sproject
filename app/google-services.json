@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "567965616966",
+    "project_id": "george-sproject",
+    "storage_bucket": "george-sproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567965616966:android:f06f70dfe5b5ba9925b347",
+        "android_client_info": {
+          "package_name": "com.apk.georgesproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWAV_NmUArQL3bKZmIc8c_MlmSkr10bjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
