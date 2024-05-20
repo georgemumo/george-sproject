@@ -7,6 +7,7 @@ import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,7 +40,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.apk.georgesproject.data.ProductViewModel
-import com.apk.georgesproject.navigation.ROUTE_VIEW_PRODUCT
+import com.apk.georgesproject.navigation.ROUTE_HOME
+import com.apk.georgesproject.navigation.ROUTE_VIEW_UPLOAD
 
 //import androidx.navigation.compose.rememberNavController
 //import com.example.morningmvvm.data.ProductViewModel
@@ -52,124 +54,78 @@ import com.apk.georgesproject.navigation.ROUTE_VIEW_PRODUCT
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddProductsScreen(navController: NavHostController) {
-    Column(modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         var context = LocalContext.current
         Text(
-            text = "Add product",
+            text = "TESTIMONIALS",
             fontSize = 30.sp,
             fontFamily = FontFamily.Cursive,
-            color = Color.Red,
+            color = Color.Blue,
             modifier = Modifier.padding(20.dp),
             fontWeight = FontWeight.Bold,
             textDecoration = TextDecoration.Underline
         )
 
-        var productName by remember { mutableStateOf(TextFieldValue("")) }
-        var productQuantity by remember { mutableStateOf(TextFieldValue("")) }
-        var productPrice by remember { mutableStateOf(TextFieldValue("")) }
-
+        var Name by remember { mutableStateOf(TextFieldValue("")) }
+        var Occupation by remember { mutableStateOf(TextFieldValue("")) }
+        var Date_of_buying by remember { mutableStateOf(TextFieldValue("")) }
+        var Brand by remember { mutableStateOf(TextFieldValue("")) }
         OutlinedTextField(
-            value = productName,
-            onValueChange = { productName = it },
-            label = { Text(text = "Product name *") },
+            value = Name,
+            onValueChange = { Name = it },
+            label = { Text(text = "Name ") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
-            value = productQuantity,
-            onValueChange = { productQuantity = it },
-            label = { Text(text = "Product quantity *") },
+            value = Occupation,
+            onValueChange = { Occupation = it },
+            label = { Text(text = "Occupation ") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
-            value = productPrice,
-            onValueChange = { productPrice = it },
-            label = { Text(text = "Product price *") },
+            value = Date_of_buying,
+            onValueChange = { Date_of_buying = it },
+            label = { Text(text = "Date_of_buying ") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
-
+        OutlinedTextField(
+            value = Brand,
+            onValueChange = { Brand = it },
+            label = { Text(text = "Brand ") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
         Button(onClick = {
 
             val productRepository = ProductViewModel.ProductViewModel(navController, context)
-            productRepository.saveProduct(productName.text.trim(),productQuantity.text.trim(),
-                productPrice.text)
-           navController.navigate(ROUTE_VIEW_PRODUCT)
+            productRepository.saveProduct(
+                Name.text.trim(), Occupation.text.trim(),
+                Date_of_buying.text.trim(), Brand.text.trim()
+            )
+            navController.navigate(ROUTE_HOME)
 
 
         }) {
             Text(text = "Save")
         }
-        Spacer(modifier = Modifier.height(20.dp))
-
-        //---------------------IMAGE PICKER START-----------------------------------//
-
-//        ImagePicker(Modifier,context, navController, productName.text.trim(), productQuantity.text.trim(), productPrice.text.trim())
 
 
     }
+
 }
-//@Composable
-//fun ImagePicker(modifier: Modifier = Modifier, context: Context, navController: NavHostController, name:String, quantity:String, price:String) {
-//    var hasImage by remember { mutableStateOf(false) }
-//    var imageUri by remember { mutableStateOf<Uri?>(null) }
-//
-//    val imagePicker = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.GetContent(),
-//        onResult = { uri ->
-//            hasImage = uri != null
-//            imageUri = uri
-//        }
-//    )
-//
-//    Column(modifier = modifier,) {
-//        if (hasImage && imageUri != null) {
-//            val bitmap = MediaStore.Images.Media.
-//            getBitmap(context.contentResolver,imageUri)
-//            Image(bitmap = bitmap.asImageBitmap(), contentDescription = "Selected image")
-//        }
-//        Column(
-//            modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp), horizontalAlignment = Alignment.CenterHorizontally,) {
-//            Button(
-//                onClick = {
-//                    imagePicker.launch("image/*")
-//                },
-//            ) {
-//                Text(
-//                    text = "Select Image"
-//                )
-//            }
-//
-//            Spacer(modifier = Modifier.height(20.dp))
-//
-//            Button(onClick = {
-//                //-----------WRITE THE UPLOAD LOGIC HERE---------------//
-//                var productRepository = ProductViewModel(navController,context)
-//                productRepository.saveProductWithImage(name, quantity, price,imageUri!!)
-//                navController.navigate(ROUTE_VIEW_UPLOAD)
-//
-//            }) {
-//                Text(text = "Upload")
-//            }
-//            Button(onClick = {
-//                //-----------WRITE THE UPLOAD LOGIC HERE---------------//
-//
-//                navController.navigate(ROUTE_VIEW_UPLOAD)
-//
-//            }) {
-//                Text(text = "view uploads")
-//            }
-//
-//        }
-//    }
-//}
 @Preview
 @Composable
 fun AddProductsScreenPreview() {

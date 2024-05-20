@@ -71,7 +71,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 
 import androidx.compose.runtime.getValue
@@ -92,22 +95,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.apk.georgesproject.data.AuthViewModel
 import com.apk.georgesproject.navigation.ROUTE_HOME
-//import com.apk.georgesproject.data.AuthViewModel
-//import com.example.morningmvvm.navigation.ROUTE_HOME
-//import com.example.morningmvvm.navigation.ROUTE_LOGIN
 
 
 @Composable
 fun RegisterScreen(navController: NavController){
     var email by remember { mutableStateOf(TextFieldValue("")) }
-    var pass by remember { mutableStateOf(TextFieldValue("")) }
-    var confirmpass by remember { mutableStateOf(TextFieldValue("")) }
+    var password by remember { mutableStateOf(TextFieldValue("")) }
+    var confirmpassword by remember { mutableStateOf(TextFieldValue("")) }
     var context= LocalContext.current
-    Column(modifier = Modifier
+    var age by remember { mutableStateOf(TextFieldValue("")) }
+    var fullName by remember { mutableStateOf(TextFieldValue(""))  }
+    var phoneNumber by remember { mutableStateOf(TextFieldValue(""))  }
+    Column(modifier= Modifier
         .fillMaxSize()
-        .background(Color.Gray),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center) {
+        .background(color = Color.White), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
 
         Text(text = "Register here",
             color = Color.Red,
@@ -127,7 +128,7 @@ fun RegisterScreen(navController: NavController){
             )
         Spacer(modifier = Modifier.height(20.dp))
 
-        OutlinedTextField(value =pass , onValueChange = {pass=it},
+        OutlinedTextField(value =password , onValueChange = {password=it},
             label = { Text(text = "Enter password") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier
@@ -135,9 +136,9 @@ fun RegisterScreen(navController: NavController){
                 .padding(8.dp)
         )
         Spacer(modifier = Modifier.height(20.dp))
-        OutlinedTextField(value =confirmpass , onValueChange = {
-            confirmpass=it},
-            label = { Text(text = "Enter Confirm Pass") },
+        OutlinedTextField(value =confirmpassword , onValueChange = {
+            confirmpassword=it},
+            label = { Text(text = "Enter Confirm Password") },
 
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             modifier = Modifier
@@ -146,10 +147,24 @@ fun RegisterScreen(navController: NavController){
         )
         Spacer(modifier = Modifier.height(20.dp))
 
+        Spacer(modifier = Modifier.height(20.dp))
+//        OutlinedTextField(
+//            modifier = Modifier.fillMaxWidth(),
+//            value = phoneNumber, onValueChange ={phoneNumber=it},
+//            placeholder = { Text(text = "0776****90")},
+//            leadingIcon = { Icon(imageVector = Icons.Default.Call, contentDescription ="" ) }
+//        )
+//        Spacer(modifier = Modifier.height(20.dp))
+//        OutlinedTextField(
+//            modifier = Modifier.fillMaxWidth(),
+//            value = age, onValueChange = {age=it},
+//            placeholder = { Text(text = "Enter your age")}
+//        )
+
 
         Button(onClick = {
            val myregister= AuthViewModel(navController,context)
-            myregister.signup(email.text.trim(),pass.text.trim(),confirmpass.text.trim())
+            myregister.signUp(email.text.trim(),password.text.trim(),confirmpassword.text.trim(),)
             navController.navigate(ROUTE_HOME)
 
 

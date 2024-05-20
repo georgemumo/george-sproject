@@ -11,24 +11,24 @@ import com.google.firebase.database.ValueEventListener
 
 import android.app.ProgressDialog
 import android.content.Context
-import androidx.navigation.NavHostController
+import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import com.apk.georgesproject.models.Upload
 import com.apk.georgesproject.navigation.ROUTE_LOGIN
+import com.apk.georgesproject.navigation.ROUTE_VIEW_UPLOAD
+import com.google.firebase.storage.FirebaseStorage
 
-//import com.example.morningmvvm.models.Product
-////import com.example.morningmvvm.models.Upload
-//import com.example.morningmvvm.navigation.ROUTE_LOGIN
-//import com.example.morningmvvm.navigation.ROUTE_VIEW_UPLOAD
-//import com.google.firebase.database.DataSnapshot
-//import com.google.firebase.database.DatabaseError
-//import com.google.firebase.database.FirebaseDatabase
-//import com.google.firebase.database.ValueEventListener
-//import com.google.firebase.storage.FirebaseStorage
 class ProductViewModel {
 
 
-    class ProductViewModel(var navController: NavHostController, var context: Context) {
+    class ProductViewModel(var navController: NavController, var context: Context) {
         var authRepository: AuthViewModel
         var progress: ProgressDialog
+        private val _data = MutableLiveData<Product>()
+        val data: LiveData<Product> get() = _data
 
         init {
             authRepository = AuthViewModel(navController, context)
@@ -38,12 +38,13 @@ class ProductViewModel {
             progress = ProgressDialog(context)
             progress.setTitle("Loading")
             progress.setMessage("Please wait...")
+
         }
 
 
-        fun saveProduct(productName: String, productQuantity: String, productPrice: String) {
+        fun saveProduct(Name: String, Occuptaion: String, Date: String, Brand: String) {
             var id = System.currentTimeMillis().toString()
-            var productData = Product(productName, productQuantity, productPrice, id)
+            var productData = Product(Name, Occuptaion, Date, Brand, id)
             var productRef = FirebaseDatabase.getInstance().getReference()
                 .child("Products/$id")
             progress.show()
@@ -99,11 +100,15 @@ class ProductViewModel {
             }
         }
 
-        fun updateProduct(name: String, quantity: String, price: String, id: String) {
+        fun updateProduct(
+            Name: String, Brand: String,
+            Occuptaion: String,
+            id: String, Date: String
+        ) {
             var updateRef = FirebaseDatabase.getInstance().getReference()
                 .child("Products/$id")
             progress.show()
-            var updateData = Product(name, quantity, price, id)
+            var updateData = Product(Name, Brand, Occuptaion, id, Date)
             updateRef.setValue(updateData).addOnCompleteListener {
                 progress.dismiss()
                 if (it.isSuccessful) {
@@ -114,52 +119,61 @@ class ProductViewModel {
             }
         }
 
-//        fun saveProductWithImage(productName:String, productQuantity:String, productPrice:String, filePath: Uri){
-//            var id = System.currentTimeMillis().toString()
-//            var storageReference = FirebaseStorage.getInstance().getReference().child("Uploads/$id")
-//            progress.show()
-//
-//            storageReference.putFile(filePath).addOnCompleteListener{
-//                progress.dismiss()
-//                if (it.isSuccessful){
-//                    // Proceed to store other data into the db
-//                    storageReference.downloadUrl.addOnSuccessListener {
-//                        var imageUrl = it.toString()
-//                        var houseData = Upload(productName,productQuantity,
-//                            productPrice,imageUrl,id)
-//                        var dbRef = FirebaseDatabase.getInstance()
-//                            .getReference().child("Uploads/$id")
-//                        dbRef.setValue(houseData)
-//                        Toast.makeText(context, "Upload successful", Toast.LENGTH_SHORT).show()
-//                        navController.navigate(ROUTE_VIEW_UPLOAD)
-//                    }
-//                }else{
-//                    Toast.makeText(context, it.exception!!.message, Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
+        fun saveProductWithImage(
+            Occuptaion: String,
+            Name: String,
+            Brand: String,
+            Date: String,
+            filePath: Uri
+        ) {
+            var id = System.currentTimeMillis().toString()
+            var storageReference = FirebaseStorage.getInstance().getReference().child("Uploads/$id")
+            progress.show()
 
+            storageReference.putFile(filePath).addOnCompleteListener {
+                progress.dismiss()
+                if (it.isSuccessful) {
+                    // Proceed to store other data into the db
+                    storageReference.downloadUrl.addOnSuccessListener {
+                        var imageUrl = it.toString()
+                        var houseData = Upload(Name, Date, Occuptaion, Brand, imageUrl, id)
+                        var dbRef = FirebaseDatabase.getInstance()
+                            .getReference().child("Uploads/$id")
+                        dbRef.setValue(houseData)
+                        Toast.makeText(context, "Upload successful", Toast.LENGTH_SHORT).show()
+                        navController.navigate(ROUTE_VIEW_UPLOAD)
+                    }
+                } else {
+                    Toast.makeText(context, it.exception!!.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
-//        fun viewUploads(upload:MutableState<Upload>, uploads:SnapshotStateList<Upload>): SnapshotStateList<Upload> {
-//            var ref = FirebaseDatabase.getInstance().getReference().child("Uploads")
-//
-//            progress.show()
-//            ref.addValueEventListener(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    progress.dismiss()
-//                    uploads.clear()
-//                    for (snap in snapshot.children){
-//                        val value = snap.getValue(Upload::class.java)
-//                        upload.value = value!!
-//                        uploads.add(value)
-//                    }
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//                    Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
-//                }
-//            })
-//            return uploads
-//        }
+        fun viewUploads(
+            upload: MutableState<Upload>,
+            uploads: SnapshotStateList<Upload>
+        ): SnapshotStateList<Upload> {
+            var ref = FirebaseDatabase.getInstance().getReference().child("Uploads")
+
+            progress.show()
+            ref.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    progress.dismiss()
+                    uploads.clear()
+                    for (snap in snapshot.children) {
+                        val value = snap.getValue(Upload::class.java)
+                        upload.value = value!!
+                        uploads.add(value)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+                }
+            })
+            return uploads
+        }
+
     }
+    
 }

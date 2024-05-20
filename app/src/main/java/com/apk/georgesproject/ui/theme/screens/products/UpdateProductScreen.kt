@@ -47,21 +47,24 @@ import com.google.firebase.database.ValueEventListener
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateProductsScreen(navController: NavHostController,id:String) {
-    Column(modifier = Modifier.fillMaxSize(),
+   Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally) {
         var context = LocalContext.current
         var name by remember { mutableStateOf("") }
-        var quantity by remember { mutableStateOf("") }
-        var price by remember { mutableStateOf("") }
+        var brand by remember { mutableStateOf("") }
+        var occupation by remember { mutableStateOf("") }
+       var date by remember { mutableStateOf("")   }
 
         var currentDataRef = FirebaseDatabase.getInstance().getReference()
             .child("Products/$id")
         currentDataRef.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 var product = snapshot.getValue(Product::class.java)
-                name = product!!.name
-                quantity = product!!.quantinty
-                price = product!!.price
+                name = product!!.Name
+                brand = product!!.Brand
+                occupation = product!!.Occupation
+                date=product!! .Date
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -79,42 +82,42 @@ fun UpdateProductsScreen(navController: NavHostController,id:String) {
             textDecoration = TextDecoration.Underline
         )
 
-        var productName by remember { mutableStateOf(TextFieldValue(name)) }
-        var productQuantity by remember { mutableStateOf(TextFieldValue(quantity)) }
-        var productPrice by remember { mutableStateOf(TextFieldValue(price)) }
+       var Name by remember { mutableStateOf(TextFieldValue(name)) }
+        var Brand by remember { mutableStateOf(TextFieldValue(brand)) }
+        var Occupation by remember { mutableStateOf(TextFieldValue(occupation)) }
+       var Date by remember { mutableStateOf(TextFieldValue(date))  }
 
         OutlinedTextField(
-            value = productName,
-            onValueChange = { productName = it },
-            label = { Text(text = "Product name *") },
+            value = Name,
+            onValueChange = { Name = it },
+            label = { Text(text = "Full name ") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
-            value = productQuantity,
-            onValueChange = { productQuantity = it },
-            label = { Text(text = "Product quantity *") },
+            value = Brand,
+            onValueChange = {Brand = it },
+            label = { Text(text = "Brand Bought") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
-            value = productPrice,
-            onValueChange = { productPrice = it },
-            label = { Text(text = "Product price *") },
+            value = Occupation,
+            onValueChange = { Occupation = it },
+            label = { Text(text = "Occupation") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(onClick = {
-            //-----------WRITE THE UPDATE LOGIC HERE---------------//
+
             var productRepository = ProductViewModel.ProductViewModel(navController, context)
-            productRepository.updateProduct(productName.text.trim(),productQuantity.text.trim(),
-                productPrice.text.trim(),id)
+            productRepository.updateProduct(Name.text.trim(),Occupation.text.trim(), Brand.text.trim(),Date.text.trim(),id)
             navController.navigate(ROUTE_VIEW_PRODUCT)
 
         }) {
@@ -122,10 +125,13 @@ fun UpdateProductsScreen(navController: NavHostController,id:String) {
         }
 
     }
+
+
+
 }
 
 @Preview
 @Composable
-fun update() {
+fun UpdateProductScreenPreview() {
     UpdateProductsScreen(rememberNavController(), id = "")
 }

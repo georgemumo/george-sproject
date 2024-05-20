@@ -2,15 +2,17 @@ package com.apk.georgesproject.models
 
 class Product {
 
-    var name:String=""
-    var quantinty:String=""
-    var price:String=""
+    var Name:String=""
+    var Date:String=""
+    var Occupation:String=""
+    var Brand:String=""
     var id:String=""
-    constructor(name:String,quantinty:String,price:String,id:String){
-        this.name=name
-        this.quantinty=quantinty
-        this.price=price
+    constructor(Name:String,Date:String,Occupation:String,id:String,Brand:String){
+        this.Name=Name
+        this.Date=Date
+        this.Brand=Brand
         this.id=id
+        this.Occupation=Occupation
     }
     constructor()
 }

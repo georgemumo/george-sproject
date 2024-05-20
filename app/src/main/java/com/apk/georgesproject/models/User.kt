@@ -2,13 +2,15 @@ package com.apk.georgesproject.models
 
 class User {
     var email:String=""
-    var pass:String=""
+    var password:String=""
     var userid:String=""
+    var confirmpassword:String=""
 
-    constructor(email:String,pass:String,userid:String){
+    constructor(email:String,confirmpassword:String,password:String,userid:String){
         this.email=email
-        this.pass=pass
+        this.password=password
         this.userid=userid
+        this.confirmpassword=confirmpassword
     }
     constructor()
 }

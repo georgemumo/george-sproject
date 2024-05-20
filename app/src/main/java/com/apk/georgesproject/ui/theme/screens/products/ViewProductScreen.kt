@@ -29,13 +29,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.apk.georgesproject.data.ProductViewModel
+
 import com.apk.georgesproject.models.Product
 import com.apk.georgesproject.navigation.ROUTE_UPDATE_PRODUCT
 
-//import com.example.morningmvvm.data.ProductViewModel
-//import com.example.morningmvvm.models.Product
-//import com.example.morningmvvm.navigation.ROUTE_UPDATE_PRODUCT
-//
 
 
 
@@ -46,10 +43,10 @@ fun ViewProductsScreen(navController:NavHostController) {
 
         val context = LocalContext.current
         val productRepository = ProductViewModel.ProductViewModel(navController, context)
-        val emptyProductState = remember { mutableStateOf(Product("","","","")) }
+        val emptyProductState = remember { mutableStateOf(Product("","","","","")) }
         val emptyProductsListState = remember { mutableStateListOf<Product>() }
 
-        val products = productRepository.viewProducts(emptyProductState, emptyProductsListState)
+        val products = productRepository.viewProducts(emptyProductState ,emptyProductsListState)
 
 
         Column(
@@ -67,9 +64,11 @@ fun ViewProductsScreen(navController:NavHostController) {
             LazyColumn(){
                 items(products){
                     ProductItem(
-                        name = it.name,
-                        quantity = it.quantinty,
-                        price = it.price,
+                        name = it.Name,
+                        quantity = it.Occupation,
+                        price = it.Brand,
+
+
                         id = it.id,
                         navController = navController,
                         productRepository = productRepository
@@ -109,7 +108,7 @@ fun ProductItem(
 
 @Preview
 @Composable
-fun view() {
+fun ViewProductsScreenPreview() {
     ViewProductsScreen(rememberNavController())
 
 }
